@@ -1,7 +1,5 @@
-QQ group: 姿态检测＆跟踪 781184396
-
 # Introduction
-  Thanks for these projects, this work now is support tiny_yolo v3 but only for test, if you want to train you can either train a model in darknet or in the second following works. It also can tracks many objects in coco classes, so please note to modify the classes in yolo.py. besides, you also can use camera for testing.
+  Thanks for these projects, this work now is support tiny_yolo v3 but only for test, if you want to train you can either train a model in darknet or in the second following       works. It also can tracks many objects in coco classes, so please note to modify the classes in yolo.py. besides, you also can use camera for testing.
 
   https://github.com/nwojke/deep_sort
   
@@ -51,7 +49,7 @@ QQ group: 姿态检测＆跟踪 781184396
   
   Model file model_data/mars-small128.pb need by deep_sort had convert to tensorflow-1.4.0
   
-  Deep sort 程序结构见 “model_data/DeepSORT”，如有错误欢迎联系修改。
+  Deep sort “model_data/DeepSORT”
  
 # Test only
 
