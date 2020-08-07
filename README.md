@@ -1,48 +1,62 @@
-# Traffic-Rules-Violation-Detection
-A deep learning based technique to detect the traffic rules violation
-There are several Neural Network architectures for detection:-
-   1. R-CNN family of architectures
-   2. Single Shot Detectors
-   3. YOLO — You Only Look Once
-   
-# Idea
+QQ group: 姿态检测＆跟踪 781184396
 
-Two of the many traffic rules violation have been taken into focus in this project
-1. Helmet detection
-2. Multiple rider detection
+# Introduction
+  Thanks for these projects, this work now is support tiny_yolo v3 but only for test, if you want to train you can either train a model in darknet or in the second following works. It also can tracks many objects in coco classes, so please note to modify the classes in yolo.py. besides, you also can use camera for testing.
 
-# Aim
-
-In this project we take an input video and firstly break it into frames. Process those images into our trained model which has a positive set and negative set of images. After the images are processed we get an output video which detects the helmets on a person.(Object detection)
-
-Secondly, for detection of multiple rider on a single vehicle we use another deep learning method that gives an identity number to each of the person after detecting them throughout the video. That is how we keep track of every person and detect multiple riders. (Object tracking)
-   
-# Implementation
-
-Let’s begin by importing the necessary libraries. The OpenCV library is going to be our best friend for this project as it has several helpful functions for manipulating images as well as useful modules such as ‘dnn’.
-Since we’ll be using a pre-trained model, we’d have to download certain files. The “weights” file , the “configuration” file, and the “coco-names” file. The weights and the configuration file can be found in this link https://pjreddie.com/darknet/yolo/ and the coco-names file can be downloaded/copied from https://github.com/pjreddie/darknet/blob/master/data/coco.names. There are several pre-trained models available and we would be using the “YOLOv3–416" model. The models are trained on the MS COCO dataset which has 80 classes of objects present in it.
-
-The image is then given to the model and a forward-pass is performed. The output of which gives us a list of detections. From this list a set of bounding-box co-ordinates for each object detected is obtained as shown below. We use a confidence threshold value to filter out weak detections. The default value I’ve used for confidence threshold is ‘0.5’. All the bounding-box co-ordinates, their class-ids and their corresponding confidence values are stored in lists “boxes”, “class_ids ”and “confidences” respectively.
-
-Now that we have obtained the locations of objects in our image, it’s time to sketch their bounding-box and tag them. The draw_boxes() function does this for us. One problem that we might encounter in our journey is that, the objects, sometimes, may be detected more than once. To avoid such a scenario, we’ll employ Non-Maximum Suppression (aka Non-Maxima Suppression). The default value I’ve used for NMS threshold is ‘0.4’. This is what is performed by the cv2.dnn.NMSBoxes() function down below. We finally display the output image using the cv2.imshow() function.
-
-# Object tracking is the process of:
-  1. Taking an initial set of object detections (such as an input set of bounding box coordinates)
-  2. Creating a unique ID for each of the initial detections
-  3. And then tracking each of the objects as they move around frames in a video, maintaining the assignment of unique IDs
+  https://github.com/nwojke/deep_sort
   
-# Multiple object tracking
-In this type of tracking, we are expected to lock onto every single object in the frame, uniquely identify each one of them and track all of them until they leave the frame.
+  https://github.com/qqwweee/keras-yolo3
+  
+  https://github.com/Qidian213/deep_sort_yolov3
 
-# Kalman Filters
-In almost any engineering problem that involves prediction in a temporal or time series sense, be it computer vision, guidance, navigation or even economics, “Kalman Filter” is the go to algorithm. Kalman filter is a crucial component in deep SORT. Our state contains 8 variables; (u,v,a,h,u’,v’,a’,h’) where (u,v) are centres of the bounding boxes, a is the aspect ratio and h, the height of the image. The other variables are the respective velocities of the variables.
+# Quick Start
 
-As we discussed previously, the variables have only absolute position and velocity factors, since we are assuming a simple linear velocity model. The Kalman filter helps us factor in the noise in detection and uses prior state in predicting a good fit for bounding boxes.
+1. Download YOLOv3 or tiny_yolov3 weights from [YOLO website](http://pjreddie.com/darknet/yolo/).Then convert the Darknet YOLO model to a Keras model. Or use what i had converted https://drive.google.com/file/d/1uvXFacPnrSMw6ldWTyLLjGLETlEsUvcE/view?usp=sharing (yolo.h5 model file with tf-1.4.0) , put it into model_data folder
+2. Run YOLO_DEEP_SORT with cmd :
+   ```
+   python demo.py
+   ```
 
-For each detection, we create a “Track”, that has all the necessary state information. It also has a parameter to track and delete tracks that had their last successful detection long back, as those objects would have left the scene.
+3. (Optional) Convert the Darknet YOLO model to a Keras model by yourself:
 
-Also, to eliminate duplicate tracks, there is a minimum number of detections threshold for the first few frames.
+  ```
+   please download the weights at first from yolo website. 
+   python convert.py yolov3.cfg yolov3.weights model_data/yolo.h5
+  ```
 
-1. The distance metric
-2. The efficient algorithm
-3. The appearance feature vector
+# Dependencies
+
+  The code is compatible with Python 2.7 and 3. The following dependencies are needed to run the tracker:
+
+    NumPy
+    sklean
+    OpenCV
+    Pillow
+
+  Additionally, feature generation requires TensorFlow-1.4.0.
+
+# Training the model
+
+  To train the deep association metric model on your datasets you can reference to https://github.com/nwojke/cosine_metric_learning  approach which is provided as a separate repository.
+  
+  Be careful that the code ignores everything but person. For your task do not forget to change :
+  
+  [deep_sort_yolov3/yolo.py]   Lines 100 to 101 :
+  
+          if predicted_class != 'person' : 
+               continue 
+
+# Note 
+  You can use any Detector you like to replace Keras_version YOLO to get bboxes , for it is to slow !
+  
+  Model file model_data/mars-small128.pb need by deep_sort had convert to tensorflow-1.4.0
+  
+  Deep sort 程序结构见 “model_data/DeepSORT”，如有错误欢迎联系修改。
+ 
+# Test only
+
+  Speed : when only run yolo detection about 11-13 fps  , after add deep_sort about 11.5 fps (GTX1060 6G)
+ 
+  Test result video : https://www.bilibili.com/video/av23500163/ generated by this project
+ 
+
